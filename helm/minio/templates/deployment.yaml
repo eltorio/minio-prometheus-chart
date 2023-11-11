@@ -3,23 +3,20 @@ kind: Deployment
 metadata:
   name: prometheus
   labels:
-    {{- include "minio.labels" . | nindent 4 }}
+    app: prometheus
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "minio.selectorLabels" . | nindent 6 }}
+      app: prometheus
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
-        {{- include "minio.labels" . | nindent 8 }}
-	{{- with .Values.podLabels }}
+        app: prometheus
+	      {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
