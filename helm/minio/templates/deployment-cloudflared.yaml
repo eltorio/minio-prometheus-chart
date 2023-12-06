@@ -26,7 +26,7 @@ spec:
       securityContext:
         {{- toYaml .Values.cloudflared.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ printf "%s-%s" .Chart.Name "cloudflared"}}
           securityContext:
             {{- toYaml .Values.cloudflared.securityContext | nindent 12 }}
           image: "{{ .Values.cloudflared.image.repository }}:{{ .Values.cloudflared.image.tag | default .Chart.AppVersion }}"
@@ -52,9 +52,9 @@ spec:
             httpGet:
               path: /ready
               port: 2000
-            failureThreshold: 1
+            failureThreshold: 3
             initialDelaySeconds: 10
-            periodSeconds: 10
+            periodSeconds: 30
           volumeMounts:
             - name: creds
               mountPath: /etc/cloudflared/creds
